@@ -24,11 +24,11 @@ input,select{font-family:inherit;outline:none}
 <script>
 const M=["지혜","희윤","범규","재민","지은","승재","수민","영태","지윤","혜윤","치승","성주","옥"];
 const DATES=["2026-06-06","2026-06-07"],DL={"2026-06-06":"6/6 (토)","2026-06-07":"6/7 (일)"};
-const HRS=Array.from({length:18},(_,i)=>i+5);
+const HRS=Array.from({length:24},(_,i)=>i);
 const P=["#F4A0A0","#F4C7A0","#E8D57E","#A0D9A0","#A0D4D9","#A0B4F4","#C7A0F4","#F4A0D9","#D4BFA0","#8FD4C1","#B0C4F4","#F0C4A0","#D4A0C7"];
 const PT=["#8B3030","#8B5A30","#6B5A10","#2D6B2D","#2D6060","#2D3D8B","#5A2D8B","#8B2D60","#6B5030","#2D6B55","#3D4D8B","#7A5530","#6B2D55"];
-const CM={"영화":{c:"#E07A5F",b:"rgba(224,122,95,.12)"},"등나무":{c:"#9B8EC4",b:"rgba(155,142,196,.12)"},"식사":{c:"#F2CC8F",b:"rgba(242,204,143,.12)"},"이동":{c:"#81B29A",b:"rgba(129,178,154,.12)"},"자유시간":{c:"#588157",b:"rgba(88,129,87,.12)"},"기타":{c:"#B5838D",b:"rgba(181,131,141,.12)"}};
-const CATS=Object.keys(CM),TRANS=["자차","카풀","고속버스","셔틀버스"];
+const CM={"영화":{c:"#E07A5F",b:"rgba(224,122,95,.12)"},"등나무":{c:"#9B8EC4",b:"rgba(155,142,196,.12)"},"이동":{c:"#81B29A",b:"rgba(129,178,154,.12)"},"식사":{c:"#F2CC8F",b:"rgba(242,204,143,.12)"},"자유시간":{c:"#588157",b:"rgba(88,129,87,.12)"},"기타":{c:"#B5838D",b:"rgba(181,131,141,.12)"}};
+const CATS=Object.keys(CM),TRANS=["자차","카풀","고속버스","셔틀버스","택시"];
 const API="https://script.google.com/macros/s/AKfycbxuKNlF3-TXzatrsVr2cPHUviBEYRM4YGSvgolYkGh_F2ejC-kiLSj7CaBUKmC0tJDUbg/exec";
 const ROOMS=[{r:"203호",m:[]},{r:"204호",m:[]},{r:"305호",m:[]},{r:"306호",m:[]}];
 const TT=["양도 받았어요","양도 했어요","양도 가능해요"],TC={"양도 받았어요":"#81B29A","양도 했어요":"#F2CC8F","양도 가능해요":"#E07A5F"};
@@ -139,7 +139,7 @@ const ss={input:{width:"100%",padding:"11px 14px",borderRadius:"10px",border:"1p
   hdr:{padding:"14px 20px",borderBottom:"1px solid rgba(129,178,154,.08)",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(26,46,26,.9)",backdropFilter:"blur(20px)",position:"sticky",top:"0",zIndex:"100"},
   overlay:{position:"fixed",top:"0",left:"0",right:"0",bottom:"0",background:"rgba(0,0,0,.6)",display:"flex",justifyContent:"center",zIndex:"200",backdropFilter:"blur(4px)"},
   modal:{background:"linear-gradient(180deg,#2d3b2d,#1f2b1f)",borderRadius:"20px 20px 0 0",padding:"24px",width:"100%",maxWidth:"460px",maxHeight:"80vh",overflowY:"auto",border:"1px solid rgba(129,178,154,.1)",borderBottom:"none"},
-  btn1:{padding:"12px",borderRadius:"12px",background:"#588157",color:"#fff",fontSize:"15px",fontWeight:"600",flex:"2"},
+  btn1:{padding:"12px",borderRadius:"12px",background:"#4CAF50",color:"#fff",fontSize:"15px",fontWeight:"700",flex:"2"},
   btnC:{padding:"12px",borderRadius:"12px",border:"1px solid rgba(129,178,154,.1)",background:"transparent",color:"#6B705C",fontSize:"15px",flex:"1"},
   sm:{padding:"6px 10px",borderRadius:"8px",fontSize:"12px",background:"transparent"}};
 
@@ -165,7 +165,7 @@ function R(){
     // Tickets
     bd.appendChild(h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px"}},
       h("h2",{style:{fontSize:"17px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#E07A5F",margin:"0"}},"2. 티켓 양도 내역"),
-      h("button",{style:{padding:"6px 14px",borderRadius:"8px",background:"#588157",color:"#fff",fontSize:"12px",fontWeight:"600"},onClick:()=>{S.showTF=true;S.tt=TT[0];S.tm="";S.tn="";R()}},"+  추가")));
+      h("button",{style:{padding:"6px 14px",borderRadius:"8px",background:"#4CAF50",color:"#fff",fontSize:"12px",fontWeight:"600"},onClick:()=>{S.showTF=true;S.tt=TT[0];S.tm="";S.tn="";R()}},"+  추가")));
     bd.appendChild(h("div",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"14px",padding:"8px 12px",borderRadius:"8px",background:"rgba(129,178,154,.06)",lineHeight:"1.6"}},"양도자와 피양도자가 표를 주고받은 후에는 항목을 삭제해주세요."));
     TT.forEach(type=>{const tt=S.tickets.filter(t=>t.type===type),tc=TC[type];
       bd.appendChild(h("div",{style:{marginBottom:"16px"}},h("div",{style:{fontSize:"13px",fontWeight:"700",color:tc,marginBottom:"6px"}},type),
@@ -184,7 +184,7 @@ function R(){
           h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},"이름"),(()=>{const i=h("input",{style:ss.input,placeholder:"예: 지혜",value:S.tn,onInput:e=>{S.tn=e.target.value}});return i})()),
           h("div",{style:{display:"flex",gap:"8px",marginTop:"8px"}},
             h("button",{style:ss.btnC,onClick:()=>{S.showTF=false;R()}},"취소"),
-            h("button",{style:{...ss.btn1,background:S.tm&&S.tn?"#588157":"#3d4a3d",color:S.tm&&S.tn?"#fff":"#4a5a4a"},onClick:addTk},S.saving?"등록 중...":"등록"))));
+            h("button",{style:{...ss.btn1,background:S.tm&&S.tn?"#4CAF50":"#3d4a3d",color:S.tm&&S.tn?"#fff":"#4a5a4a"},onClick:addTk},S.saving?"등록 중...":"등록"))));
       ov.appendChild(md);pg.appendChild(ov)}
     app.appendChild(pg);return}
 
@@ -215,7 +215,7 @@ function R(){
         h("div",{style:{fontSize:"18px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#e8e0d4",marginBottom:"8px"}},"뒷풀이에 참여하시겠습니까?"),
         h("div",{style:{fontSize:"13px",color:"#6B705C"}},"6/6 저녁 ~ 6/7 새벽")));
       md.appendChild(h("div",{style:{display:"flex",gap:"8px"}},
-        h("button",{style:{flex:"1",padding:"14px",borderRadius:"12px",background:"#588157",color:"#fff",fontSize:"16px",fontWeight:"700"},onClick:()=>{S.apStep="time";R()}},"참여!"),
+        h("button",{style:{flex:"1",padding:"14px",borderRadius:"12px",background:"#4CAF50",color:"#fff",fontSize:"16px",fontWeight:"700"},onClick:()=>{S.apStep="time";R()}},"참여!"),
         h("button",{style:{flex:"1",padding:"14px",borderRadius:"12px",border:"1px solid rgba(129,178,154,.15)",background:"transparent",color:"#6B705C",fontSize:"16px",fontWeight:"600"},onClick:()=>{S.showAP=false;R()}},"패스")))
     }else{
       md.appendChild(h("div",{style:{fontSize:"17px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#e8e0d4",marginBottom:"20px",textAlign:"center"}},"몇 시부터 몇 시까지?"));
@@ -233,7 +233,7 @@ function R(){
   pg.appendChild(h("div",{style:ss.hdr},h("div",{},h("div",{style:{fontSize:"15px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",letterSpacing:"1px"}},"산골영화제"),h("div",{style:{fontSize:"11px",color:"#6B705C"}},S.user)),
     h("div",{style:{display:"flex",gap:"6px",alignItems:"center"}},
       h("button",{style:{...ss.sm,padding:"8px 12px",border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.page="notice";R()}},"Notice"),
-      h("button",{style:{...ss.sm,padding:"8px 12px",border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.user=null;S.sel=null;S.page="login";R()}},"나가기"))));
+      h("button",{style:{...ss.sm,padding:"8px 12px",border:"1px solid rgba(129,178,154,.12)",color:"#81B29A"},onClick:()=>{S.user=null;S.sel=null;S.page="login";R()}},"HOME"))));
 
   // Toggles
   const tg=h("div",{style:{padding:"12px 20px 0",display:"flex",gap:"12px",alignItems:"center",justifyContent:"space-between"}});
@@ -254,7 +254,7 @@ function R(){
     if(S.sel){const mi=M.indexOf(S.sel);
       const hd=h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}},
         h("h2",{style:{fontSize:"17px",fontWeight:"700",color:P[mi],fontFamily:"'Nanum Myeongjo',serif"}},S.sel+"의 스케줄"));
-      if(S.user===S.sel)hd.appendChild(h("button",{style:{padding:"7px 16px",borderRadius:"10px",background:"#588157",color:"#fff",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.editing=null;S.f={title:"",cat:CATS[0],sh:10,sm:0,eh:12,em:0,date:S.date,det:""};S.showAdd=true;R()}},"+  추가"));
+      if(S.user===S.sel)hd.appendChild(h("button",{style:{padding:"7px 16px",borderRadius:"10px",background:"#4CAF50",color:"#fff",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.editing=null;S.f={title:"",cat:CATS[0],sh:10,sm:0,eh:12,em:0,date:S.date,det:""};S.showAdd=true;R()}},"+  추가"));
       iv.appendChild(hd);
       const items=getItems(S.sel,S.date);
       if(!items.length){iv.appendChild(h("div",{style:{padding:"36px",textAlign:"center",color:"#4a5a4a",background:"rgba(31,43,31,.4)",borderRadius:"14px",border:"1px dashed rgba(129,178,154,.12)"}},"아직 등록된 스케줄이 없어요"))
@@ -277,7 +277,7 @@ function R(){
   // Overview
   if(S.view==="overview"){const ov=h("div",{style:{padding:"12px 20px 20px",overflowX:"auto"}});
     const inner=h("div",{style:{minWidth:"300px"}});
-    HRS.forEach(hr=>{const sum=hourSum(S.date,hr);
+    HRS.filter(hr=>hr>=6&&hr<=23).forEach(hr=>{const sum=hourSum(S.date,hr);
       inner.appendChild(h("div",{style:{display:"flex",borderBottom:"1px solid rgba(129,178,154,.05)",minHeight:"38px"}},
         h("div",{style:{width:"52px",flexShrink:"0",padding:"8px 0",fontSize:"11px",color:"#4a5a4a",fontWeight:"500",textAlign:"right",paddingRight:"12px",fontFamily:"monospace"}},String(hr).padStart(2,"0")+":00"),
         h("div",{style:{flex:"1",padding:"5px 0",display:"flex",flexWrap:"wrap",gap:"4px"}},...sum.map(({m:member,items,c})=>
@@ -319,7 +319,7 @@ function R(){
     const v=fv();
     fm.appendChild(h("div",{style:{display:"flex",gap:"8px",marginTop:"8px"}},
       h("button",{style:ss.btnC,onClick:()=>{S.showAdd=false;S.editing=null;R()}},"취소"),
-      h("button",{style:{...ss.btn1,background:v?"#588157":"#3d4a3d",color:v?"#fff":"#4a5a4a",cursor:v?"pointer":"default"},onClick:()=>{if(v){S.editing?updSched():addSched()}}},S.saving?"저장 중...":(S.editing?"수정 완료":"추가하기"))));
+      h("button",{style:{...ss.btn1,background:v?"#4CAF50":"#3d4a3d",color:v?"#fff":"#4a5a4a",cursor:v?"pointer":"default"},onClick:()=>{if(v){S.editing?updSched():addSched()}}},S.saving?"저장 중...":(S.editing?"수정 완료":"추가하기"))));
     md.appendChild(fm);ov.appendChild(md);pg.appendChild(ov)}
 
   if(S.saving)pg.appendChild(h("div",{style:{position:"fixed",bottom:"20px",left:"50%",transform:"translateX(-50%)",background:"rgba(31,43,31,.95)",color:"#81B29A",padding:"8px 20px",borderRadius:"20px",fontSize:"13px",border:"1px solid rgba(88,129,87,.3)",zIndex:"300"}},"저장 중..."));
