@@ -4,523 +4,282 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>무주산골영화제 2026</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a2e1a">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { min-height:100vh; background:linear-gradient(180deg,#1a2e1a 0%,#243024 40%,#1c2a1c 100%); font-family:'Noto Sans KR',sans-serif; color:#e8e0d4; }
-button { font-family:inherit; cursor:pointer; border:none; }
-input,select { font-family:inherit; }
-.serif { font-family:'Nanum Myeongjo',serif; }
-
-/* Scrollbar */
-::-webkit-scrollbar { height:4px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:rgba(129,178,154,0.2); border-radius:4px; }
-
-/* Loading overlay */
-.loading-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:999;
-  backdrop-filter:blur(4px);
-}
-.loading-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#81B29A; margin:0 4px; animation:bounce 1.2s infinite; }
-.loading-dot:nth-child(2) { animation-delay:0.2s; }
-.loading-dot:nth-child(3) { animation-delay:0.4s; }
-@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-12px)} }
-
-/* Modal backdrop */
-.modal-backdrop {
-  position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:flex-end; justify-content:center;
-  z-index:200; backdrop-filter:blur(4px);
-}
-.modal-center { align-items:center; }
-.modal-panel {
-  background:linear-gradient(180deg,#2d3b2d,#1f2b1f); border-radius:20px 20px 0 0; padding:24px; width:100%; max-width:460px;
-  max-height:80vh; overflow-y:auto; border:1px solid rgba(129,178,154,0.1); border-bottom:none;
-}
-.modal-panel-center { border-radius:20px; border-bottom:1px solid rgba(129,178,154,0.1); }
-
-.input {
-  width:100%; padding:11px 14px; border-radius:10px; border:1px solid rgba(129,178,154,0.2);
-  background:rgba(26,46,26,0.8); color:#e8e0d4; font-size:15px; outline:none;
-}
-.btn-primary { padding:12px; border-radius:12px; background:#588157; color:#fff; font-size:15px; font-weight:600; width:100%; }
-.btn-primary:disabled { background:#3d4a3d; color:#4a5a4a; cursor:default; }
-.btn-ghost { padding:12px; border-radius:12px; border:1px solid rgba(129,178,154,0.1); background:transparent; color:#6B705C; font-size:15px; }
-
-.tag { font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(180deg,#1a2e1a 0%,#243024 40%,#1c2a1c 100%);color:#e8e0d4;min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,select{font-family:inherit;outline:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:rgba(129,178,154,.2);border-radius:4px}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-const MEMBERS = ["지혜","희윤","범규","재민","지은","승재","수민","영태","지윤","혜윤","치승","성주","옥"];
-const DATES = ["2026-06-06","2026-06-07"];
-const DATE_LABELS = {"2026-06-06":"6/6 (토)","2026-06-07":"6/7 (일)"};
-const HOURS = Array.from({length:18},(_,i)=>i+5);
-const PASTEL = ["#F4A0A0","#F4C7A0","#E8D57E","#A0D9A0","#A0D4D9","#A0B4F4","#C7A0F4","#F4A0D9","#D4BFA0","#8FD4C1","#B0C4F4","#F0C4A0","#D4A0C7"];
-const PASTEL_TEXT = ["#8B3030","#8B5A30","#6B5A10","#2D6B2D","#2D6060","#2D3D8B","#5A2D8B","#8B2D60","#6B5030","#2D6B55","#3D4D8B","#7A5530","#6B2D55"];
+const M=["지혜","희윤","범규","재민","지은","승재","수민","영태","지윤","혜윤","치승","성주","옥"];
+const DATES=["2026-06-06","2026-06-07"],DL={"2026-06-06":"6/6 (토)","2026-06-07":"6/7 (일)"};
+const HRS=Array.from({length:18},(_,i)=>i+5);
+const P=["#F4A0A0","#F4C7A0","#E8D57E","#A0D9A0","#A0D4D9","#A0B4F4","#C7A0F4","#F4A0D9","#D4BFA0","#8FD4C1","#B0C4F4","#F0C4A0","#D4A0C7"];
+const PT=["#8B3030","#8B5A30","#6B5A10","#2D6B2D","#2D6060","#2D3D8B","#5A2D8B","#8B2D60","#6B5030","#2D6B55","#3D4D8B","#7A5530","#6B2D55"];
+const CM={"영화":{c:"#E07A5F",b:"rgba(224,122,95,.12)"},"등나무":{c:"#9B8EC4",b:"rgba(155,142,196,.12)"},"식사":{c:"#F2CC8F",b:"rgba(242,204,143,.12)"},"이동":{c:"#81B29A",b:"rgba(129,178,154,.12)"},"자유시간":{c:"#588157",b:"rgba(88,129,87,.12)"},"기타":{c:"#B5838D",b:"rgba(181,131,141,.12)"}};
+const CATS=Object.keys(CM),TRANS=["자차","카풀","고속버스","셔틀버스"];
+const API="https://script.google.com/macros/s/AKfycbxuKNlF3-TXzatrsVr2cPHUviBEYRM4YGSvgolYkGh_F2ejC-kiLSj7CaBUKmC0tJDUbg/exec";
+const ROOMS=[{r:"203호",m:[]},{r:"204호",m:[]},{r:"305호",m:[]},{r:"306호",m:[]}];
+const TT=["양도 받았어요","양도 했어요","양도 가능해요"],TC={"양도 받았어요":"#81B29A","양도 했어요":"#F2CC8F","양도 가능해요":"#E07A5F"};
+const APS=[18,19,20,21,22,23],APE=[0,1,2,3,4,5,6];
 
-const CATEGORIES = {
-  "영화":{color:"#E07A5F",bg:"rgba(224,122,95,0.12)"},
-  "등나무":{color:"#9B8EC4",bg:"rgba(155,142,196,0.12)"},
-  "식사":{color:"#F2CC8F",bg:"rgba(242,204,143,0.12)"},
-  "이동":{color:"#81B29A",bg:"rgba(129,178,154,0.12)"},
-  "자유시간":{color:"#588157",bg:"rgba(88,129,87,0.12)"},
-  "기타":{color:"#B5838D",bg:"rgba(181,131,141,0.12)"}
-};
-const CAT_KEYS = Object.keys(CATEGORIES);
-const TRANSPORT = ["자차","카풀","고속버스","셔틀버스"];
-const TICKET_TYPES = ["양도 받았어요","양도 했어요","양도 가능해요"];
-const TICKET_COLORS = {"양도 받았어요":"#81B29A","양도 했어요":"#F2CC8F","양도 가능해요":"#E07A5F"};
-const AP_START = [18,19,20,21,22,23];
-const AP_END = [0,1,2,3,4,5,6];
-const ROOMS = [{room:"203호",members:[]},{room:"204호",members:[]},{room:"305호",members:[]},{room:"306호",members:[]}];
+const S={sched:{},tickets:[],user:null,sel:null,date:DATES[0],view:"individual",saving:false,loading:true,page:"login",
+showAdd:false,showTF:false,showAP:false,apStep:"ask",apSH:21,apEH:2,editing:null,
+f:{title:"",cat:CATS[0],sh:10,sm:0,eh:12,em:0,date:DATES[0],det:""},
+tt:TT[0],tm:"",tn:""};
 
-const API = "https://script.google.com/macros/s/AKfycbxuKNlF3-TXzatrsVr2cPHUviBEYRM4YGSvgolYkGh_F2ejC-kiLSj7CaBUKmC0tJDUbg/exec";
+const fmt=(h,m)=>String(h).padStart(2,"0")+":"+String(m||0).padStart(2,"0");
+const pT=s=>{const p=String(s).split(":").map(Number);return{h:p[0]||0,m:p[1]||0}};
 
-// State
-let schedules = {};
-let tickets = [];
-let loggedInAs = null;
-let selectedMember = null;
-let viewMode = "individual";
-let selectedDate = DATES[0];
-let saving = false;
-let page = "login"; // login | main | notice
-
-const $ = document.getElementById.bind(document);
-const app = document.getElementById("app");
-
-// API
-async function api(action, extra={}) {
-  const params = new URLSearchParams({action, ...extra});
-  const r = await fetch(`${API}?${params.toString()}`);
-  return r.json();
+async function q(action,extra={}){
+  const p=new URLSearchParams({action,...extra});
+  try{const r=await fetch(API+"?"+p);return await r.json();}catch(e){console.error(e);return null;}
 }
 
-function groupByMember(rows) {
-  const g = {};
-  (rows||[]).forEach(r => { if(!r.member) return; if(!g[r.member]) g[r.member]=[]; g[r.member].push(r); });
-  return g;
+function grp(rows){const g={};(rows||[]).forEach(r=>{if(!r.member)return;(g[r.member]=g[r.member]||[]).push(r)});return g}
+
+async function load(){
+  const[s,t]=await Promise.all([q("getSchedules"),q("getTickets")]);
+  if(s)S.sched=grp(s);if(t)S.tickets=t;S.loading=false;R();
 }
 
-async function loadAll() {
-  showLoading(true);
-  try {
-    const [s,t] = await Promise.all([api("getSchedules"), api("getTickets")]);
-    if(s) schedules = groupByMember(s);
-    if(t) tickets = Array.isArray(t) ? t : [];
-  } catch(e) { console.error(e); }
-  showLoading(false);
-  render();
-}
+function getItems(m,d){return(S.sched[m]||[]).filter(i=>i.date===d).sort((a,b)=>String(a.start).localeCompare(String(b.start)))}
+function hourSum(d,hr){const res=[];M.forEach((m,i)=>{const items=(S.sched[m]||[]).filter(x=>{if(x.date!==d)return false;const s=pT(x.start),e=pT(x.end);return(s.h*60+s.m)<(hr+1)*60&&(e.h*60+e.m)>hr*60});if(items.length)res.push({m,items,c:P[i]})});return res}
+function fv(){if(!S.f.title)return false;if(["영화","식사","이동","등나무"].includes(S.f.cat)&&!S.f.det)return false;return true}
 
-async function apiAdd(type, data) {
-  showLoading(true);
-  await api(type === "schedule" ? "addSchedule" : "addTicket", {data:JSON.stringify(data)});
-  await loadAll();
-}
+async function addSched(){if(!S.user||!fv())return;S.saving=true;S.showAdd=false;R();
+  await q("addSchedule",{data:JSON.stringify({id:""+Date.now(),member:S.user,title:S.f.title,category:S.f.cat,start:fmt(S.f.sh,S.f.sm),end:fmt(S.f.eh,S.f.em),date:S.f.date,detail:S.f.det||""})});
+  S.f={title:"",cat:CATS[0],sh:10,sm:0,eh:12,em:0,date:S.date,det:""};S.saving=false;await load()}
+async function delSched(m,id){if(S.user!==m)return;S.saving=true;R();await q("deleteSchedule",{id});S.saving=false;await load()}
+async function updSched(){if(!S.user||!S.editing||!fv())return;S.saving=true;S.showAdd=false;R();
+  await q("updateSchedule",{data:JSON.stringify({id:S.editing.id,member:S.user,title:S.f.title,category:S.f.cat,start:fmt(S.f.sh,S.f.sm),end:fmt(S.f.eh,S.f.em),date:S.f.date,detail:S.f.det||""})});
+  S.editing=null;S.saving=false;await load()}
+function editSched(item){const s=pT(item.start),e=pT(item.end);S.f={title:item.title,cat:item.category,sh:s.h,sm:s.m,eh:e.h,em:e.m,date:item.date,det:item.detail||""};S.editing=item;S.showAdd=true;R()}
 
-async function apiDelete(type, id) {
-  showLoading(true);
-  await api(type === "schedule" ? "deleteSchedule" : "deleteTicket", {id});
-  await loadAll();
-}
+async function addAP(){S.saving=true;R();const id=""+Date.now(),items=[];
+  if(S.apEH<=6){items.push({id:id+"a",member:S.user,title:"뒷풀이",category:"기타",start:fmt(S.apSH,0),end:"23:59",date:"2026-06-06",detail:""});
+    if(S.apEH>0)items.push({id:id+"b",member:S.user,title:"뒷풀이",category:"기타",start:"00:00",end:fmt(S.apEH,0),date:"2026-06-07",detail:""});
+  }else items.push({id:id+"a",member:S.user,title:"뒷풀이",category:"기타",start:fmt(S.apSH,0),end:fmt(S.apEH,0),date:"2026-06-06",detail:""});
+  for(const it of items)await q("addSchedule",{data:JSON.stringify(it)});S.showAP=false;S.saving=false;await load()}
 
-async function apiUpdate(data) {
-  showLoading(true);
-  await api("updateSchedule", {data:JSON.stringify(data)});
-  await loadAll();
-}
+async function addTk(){if(!S.tm||!S.tn)return;S.saving=true;R();
+  await q("addTicket",{data:JSON.stringify({id:""+Date.now(),type:S.tt,movie:S.tm,name:S.tn})});S.tm="";S.tn="";S.showTF=false;S.saving=false;await load()}
+async function delTk(id){S.saving=true;R();await q("deleteTicket",{id});S.saving=false;await load()}
 
-function showLoading(show) {
-  saving = show;
-  let el = document.getElementById("loading-overlay");
-  if(show) {
-    if(!el) { el = document.createElement("div"); el.id="loading-overlay"; el.className="loading-overlay"; el.innerHTML='<div><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>'; document.body.appendChild(el); }
-  } else { if(el) el.remove(); }
-}
+function login(name){S.user=name;S.sel=name;S.page="main";
+  if(!(S.sched[name]||[]).some(i=>i.category==="기타"&&i.title==="뒷풀이")){S.showAP=true;S.apStep="ask"}R()}
 
-function fmt(h,m) { return `${String(h).padStart(2,"0")}:${String(m||0).padStart(2,"0")}`; }
-function parseT(s) { const [h,m]=(s||"0:0").split(":").map(Number); return {h,m}; }
+// ===== DOM helpers =====
+function h(t,a,...c){const el=document.createElement(t);if(a)Object.entries(a).forEach(([k,v])=>{
+  if(k==="style"&&typeof v==="object")Object.assign(el.style,v);
+  else if(k.startsWith("on"))el.addEventListener(k.slice(2).toLowerCase(),v);
+  else if(k==="cls")el.className=v;
+  else el.setAttribute(k,v)});
+  c.flat(9).forEach(x=>{if(x==null||x===false)return;el.appendChild(typeof x==="string"||typeof x==="number"?document.createTextNode(x):x)});return el}
 
-function getMemberItems(member, date) {
-  return (schedules[member]||[]).filter(i=>i.date===date).sort((a,b)=>String(a.start).localeCompare(String(b.start)));
-}
+const ss={input:{width:"100%",padding:"11px 14px",borderRadius:"10px",border:"1px solid rgba(129,178,154,.2)",background:"rgba(26,46,26,.8)",color:"#e8e0d4",fontSize:"15px"},
+  hdr:{padding:"14px 20px",borderBottom:"1px solid rgba(129,178,154,.08)",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(26,46,26,.9)",backdropFilter:"blur(20px)",position:"sticky",top:"0",zIndex:"100"},
+  overlay:{position:"fixed",top:"0",left:"0",right:"0",bottom:"0",background:"rgba(0,0,0,.6)",display:"flex",justifyContent:"center",zIndex:"200",backdropFilter:"blur(4px)"},
+  modal:{background:"linear-gradient(180deg,#2d3b2d,#1f2b1f)",borderRadius:"20px 20px 0 0",padding:"24px",width:"100%",maxWidth:"460px",maxHeight:"80vh",overflowY:"auto",border:"1px solid rgba(129,178,154,.1)",borderBottom:"none"},
+  btn1:{padding:"12px",borderRadius:"12px",background:"#588157",color:"#fff",fontSize:"15px",fontWeight:"600",flex:"2"},
+  btnC:{padding:"12px",borderRadius:"12px",border:"1px solid rgba(129,178,154,.1)",background:"transparent",color:"#6B705C",fontSize:"15px",flex:"1"},
+  sm:{padding:"6px 10px",borderRadius:"8px",fontSize:"12px",background:"transparent"}};
 
-function getHourSummary(date, hour) {
-  const results = [];
-  MEMBERS.forEach((member,idx) => {
-    const items = (schedules[member]||[]).filter(i => {
-      if(i.date!==date) return false;
-      const s=parseT(i.start), e=parseT(i.end);
-      return (s.h*60+s.m)<(hour+1)*60 && (e.h*60+e.m)>hour*60;
-    });
-    if(items.length>0) results.push({member,items,color:PASTEL[idx]});
-  });
-  return results;
-}
+function mkSel(val,opts,cb){const s=h("select",{style:{flex:"1",padding:"8px",borderRadius:"8px",border:"1px solid rgba(129,178,154,.15)",background:"rgba(26,46,26,.9)",color:"#e8e0d4",fontSize:"14px"},onChange:e=>cb(+e.target.value)});
+  opts.forEach(o=>{const op=document.createElement("option");op.value=o.v;op.textContent=o.l;if(o.v===val)op.selected=true;s.appendChild(op)});return s}
 
-// ============ RENDER ============
-function render() {
-  if(page==="notice") return renderNotice();
-  if(!loggedInAs) return renderLogin();
-  renderMain();
-}
+// ===== RENDER =====
+function R(){
+  const app=document.getElementById("app");app.innerHTML="";
+  if(S.loading){app.appendChild(h("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",height:"100vh"}},h("div",{style:{color:"#81B29A",fontSize:"16px"}},"불러오는 중...")));return}
 
-function renderLogin() {
-  app.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;padding:20px">
-      <div style="text-align:center;margin-top:48px;margin-bottom:28px">
-        <div style="font-size:11px;letter-spacing:8px;color:#81B29A;font-weight:300;margin-bottom:8px">2026 · 무주</div>
-        <h1 class="serif" style="font-size:26px;font-weight:800;color:#e8e0d4;letter-spacing:2px">산골영화제</h1>
-        <div style="font-size:12px;color:#6B705C;margin-top:10px;letter-spacing:3px">6.6 — 6.7 스케줄 보드</div>
-        <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,#81B29A,transparent);margin:16px auto 0"></div>
-      </div>
-      <button onclick="page='notice';render()" style="padding:10px 24px;border-radius:12px;border:1px solid rgba(224,122,95,0.3);background:rgba(224,122,95,0.08);color:#E07A5F;font-size:14px;font-weight:600;margin-bottom:24px;width:100%;max-width:380px">Notice</button>
-      <div style="width:100%;max-width:380px">
-        <div style="color:#6B705C;font-size:13px;margin-bottom:16px;text-align:center">내 이름을 선택하세요</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-          ${MEMBERS.map((n,i) => {
-            const has = (schedules[n]||[]).length > 0;
-            return `<button onclick="handleLogin('${n}')" style="padding:14px 8px;border-radius:12px;background:${PASTEL[i]};color:${PASTEL_TEXT[i]};font-size:15px;font-weight:700;position:relative">${n}${has?'<div style="position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:#588157"></div>':''}</button>`;
-          }).join("")}
-        </div>
-      </div>
-    </div>`;
-}
+  // NOTICE
+  if(S.page==="notice"){
+    const pg=h("div",{});
+    pg.appendChild(h("div",{style:ss.hdr},h("div",{style:{fontSize:"15px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",letterSpacing:"1px"}},"Notice"),
+      h("button",{style:{...ss.sm,border:"1px solid rgba(129,178,154,.12)",color:"#81B29A"},onClick:()=>{S.page=S.user?"main":"login";R()}},"← 돌아가기")));
+    const bd=h("div",{style:{padding:"20px",maxWidth:"480px",margin:"0 auto"}});
+    // Rooms
+    bd.appendChild(h("div",{style:{marginBottom:"32px"}},h("h2",{style:{fontSize:"17px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#A98467",marginBottom:"14px"}},"1. 숙소 배정"),
+      ...ROOMS.map(r=>h("div",{style:{background:"rgba(31,43,31,.6)",borderRadius:"12px",padding:"12px 16px",borderLeft:"4px solid #A98467",marginBottom:"8px"}},
+        h("div",{style:{fontSize:"14px",fontWeight:"700",color:"#A98467",marginBottom:"4px"}},r.r),
+        h("div",{style:{fontSize:"14px",color:r.m.length?"#e8e0d4":"#4a5a4a"}},r.m.length?r.m.join(", "):"미정")))));
+    // Tickets
+    bd.appendChild(h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px"}},
+      h("h2",{style:{fontSize:"17px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#E07A5F",margin:"0"}},"2. 티켓 양도 내역"),
+      h("button",{style:{padding:"6px 14px",borderRadius:"8px",background:"#588157",color:"#fff",fontSize:"12px",fontWeight:"600"},onClick:()=>{S.showTF=true;S.tt=TT[0];S.tm="";S.tn="";R()}},"+  추가")));
+    bd.appendChild(h("div",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"14px",padding:"8px 12px",borderRadius:"8px",background:"rgba(129,178,154,.06)",lineHeight:"1.6"}},"양도자와 피양도자가 표를 주고받은 후에는 항목을 삭제해주세요."));
+    TT.forEach(type=>{const tt=S.tickets.filter(t=>t.type===type),tc=TC[type];
+      bd.appendChild(h("div",{style:{marginBottom:"16px"}},h("div",{style:{fontSize:"13px",fontWeight:"700",color:tc,marginBottom:"6px"}},type),
+        ...(tt.length?tt.map(t=>h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(31,43,31,.6)",borderRadius:"10px",padding:"10px 14px",borderLeft:"3px solid "+tc,marginBottom:"6px"}},
+          h("div",{style:{fontSize:"14px",color:"#e8e0d4"}},t.movie+" ",h("span",{style:{color:"#6B705C"}},"("+t.name+")")),
+          h("button",{style:{padding:"3px 8px",borderRadius:"6px",background:"rgba(224,122,95,.1)",color:"#E07A5F",fontSize:"11px"},onClick:()=>delTk(t.id)},"삭제")))
+        :[h("div",{style:{fontSize:"13px",color:"#4a5a4a",padding:"6px 0"}},"—")])))});
+    pg.appendChild(bd);
+    // Ticket form
+    if(S.showTF){const ov=h("div",{style:{...ss.overlay,alignItems:"flex-end"},onClick:e=>{if(e.target===e.currentTarget){S.showTF=false;R()}}});
+      const md=h("div",{style:ss.modal},h("h3",{style:{fontSize:"17px",fontWeight:"700",margin:"0 0 20px",fontFamily:"'Nanum Myeongjo',serif",color:"#E07A5F"}},"티켓 양도 등록"),
+        h("div",{style:{display:"flex",flexDirection:"column",gap:"14px"}},
+          h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"6px",display:"block"}},"상태"),
+            h("div",{style:{display:"flex",gap:"6px",flexWrap:"wrap"}},...TT.map(t=>h("button",{style:{padding:"7px 12px",borderRadius:"8px",background:S.tt===t?"rgba(224,122,95,.2)":"rgba(31,43,31,.6)",color:S.tt===t?"#E07A5F":"#6B705C",fontSize:"12px",fontWeight:"600"},onClick:()=>{S.tt=t;R()}},t)))),
+          h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},"영화 제목"),(()=>{const i=h("input",{style:ss.input,placeholder:"예: 어느 가족",value:S.tm,onInput:e=>{S.tm=e.target.value}});return i})()),
+          h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},"이름"),(()=>{const i=h("input",{style:ss.input,placeholder:"예: 지혜",value:S.tn,onInput:e=>{S.tn=e.target.value}});return i})()),
+          h("div",{style:{display:"flex",gap:"8px",marginTop:"8px"}},
+            h("button",{style:ss.btnC,onClick:()=>{S.showTF=false;R()}},"취소"),
+            h("button",{style:{...ss.btn1,background:S.tm&&S.tn?"#588157":"#3d4a3d",color:S.tm&&S.tn?"#fff":"#4a5a4a"},onClick:addTk},S.saving?"등록 중...":"등록"))));
+      ov.appendChild(md);pg.appendChild(ov)}
+    app.appendChild(pg);return}
 
-function handleLogin(name) {
-  loggedInAs = name;
-  selectedMember = name;
-  page = "main";
-  const existing = schedules[name] || [];
-  const hasAp = existing.some(i => i.title === "뒷풀이" && i.category === "기타");
-  render();
-  if(!hasAp) showAfterpartyModal();
-}
+  // LOGIN
+  if(!S.user){const pg=h("div",{style:{display:"flex",flexDirection:"column",alignItems:"center",padding:"20px"}});
+    pg.appendChild(h("div",{style:{textAlign:"center",marginTop:"48px",marginBottom:"28px"}},
+      h("div",{style:{fontSize:"11px",letterSpacing:"8px",color:"#81B29A",fontWeight:"300",marginBottom:"8px"}},"2026 · 무주"),
+      h("h1",{style:{fontSize:"26px",fontWeight:"800",color:"#e8e0d4",fontFamily:"'Nanum Myeongjo',serif",letterSpacing:"2px"}},"산골영화제"),
+      h("div",{style:{fontSize:"12px",color:"#6B705C",marginTop:"10px",letterSpacing:"3px"}},"6.6 — 6.7 스케줄 보드"),
+      h("div",{style:{width:"60px",height:"1px",background:"linear-gradient(90deg,transparent,#81B29A,transparent)",margin:"16px auto 0"}})));
+    pg.appendChild(h("button",{style:{padding:"10px 24px",borderRadius:"12px",border:"1px solid rgba(224,122,95,.3)",background:"rgba(224,122,95,.08)",color:"#E07A5F",fontSize:"14px",fontWeight:"600",marginBottom:"24px",width:"100%",maxWidth:"380px"},onClick:()=>{S.page="notice";R()}},"Notice"));
+    const gd=h("div",{style:{width:"100%",maxWidth:"380px"}},h("div",{style:{color:"#6B705C",fontSize:"13px",marginBottom:"16px",textAlign:"center"}},"내 이름을 선택하세요"));
+    const gr=h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}});
+    M.forEach((n,i)=>{const has=(S.sched[n]||[]).length>0;
+      const b=h("button",{style:{padding:"14px 8px",borderRadius:"12px",background:P[i],color:PT[i],fontSize:"15px",fontWeight:"700",position:"relative"},onClick:()=>login(n)},n);
+      if(has)b.appendChild(h("div",{style:{position:"absolute",top:"6px",right:"6px",width:"6px",height:"6px",borderRadius:"50%",background:"#588157"}}));
+      gr.appendChild(b)});
+    gd.appendChild(gr);pg.appendChild(gd);app.appendChild(pg);return}
 
-// ============ AFTERPARTY ============
-function showAfterpartyModal() {
-  let startH = 21, endH = 2;
-  const modal = document.createElement("div");
-  modal.className = "modal-backdrop modal-center";
-  modal.innerHTML = `<div class="modal-panel modal-panel-center" style="max-width:360px;padding:28px" id="ap-panel"></div>`;
-  document.body.appendChild(modal);
-  renderApAsk();
+  // MAIN
+  const pg=h("div",{});
 
-  function renderApAsk() {
-    document.getElementById("ap-panel").innerHTML = `
-      <div style="text-align:center;margin-bottom:24px">
-        <div class="serif" style="font-size:18px;font-weight:700;color:#e8e0d4;margin-bottom:8px">뒷풀이에 참여하시겠습니까?</div>
-        <div style="font-size:13px;color:#6B705C">6/6 저녁 ~ 6/7 새벽</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button onclick="document.getElementById('ap-time').style.display='block'" id="ap-yes" class="btn-primary" style="flex:1;font-size:16px;font-weight:700">참여!</button>
-        <button onclick="this.closest('.modal-backdrop').remove()" class="btn-ghost" style="flex:1;font-size:16px;font-weight:600">패스</button>
-      </div>`;
-    document.getElementById("ap-yes").onclick = renderApTime;
-  }
+  // Afterparty
+  if(S.showAP){const ov=h("div",{style:{...ss.overlay,alignItems:"center"}});
+    const md=h("div",{style:{...ss.modal,borderRadius:"20px",borderBottom:"1px solid rgba(129,178,154,.1)",maxWidth:"360px",padding:"28px"}});
+    if(S.apStep==="ask"){
+      md.appendChild(h("div",{style:{textAlign:"center",marginBottom:"24px"}},
+        h("div",{style:{fontSize:"18px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#e8e0d4",marginBottom:"8px"}},"뒷풀이에 참여하시겠습니까?"),
+        h("div",{style:{fontSize:"13px",color:"#6B705C"}},"6/6 저녁 ~ 6/7 새벽")));
+      md.appendChild(h("div",{style:{display:"flex",gap:"8px"}},
+        h("button",{style:{flex:"1",padding:"14px",borderRadius:"12px",background:"#588157",color:"#fff",fontSize:"16px",fontWeight:"700"},onClick:()=>{S.apStep="time";R()}},"참여!"),
+        h("button",{style:{flex:"1",padding:"14px",borderRadius:"12px",border:"1px solid rgba(129,178,154,.15)",background:"transparent",color:"#6B705C",fontSize:"16px",fontWeight:"600"},onClick:()=>{S.showAP=false;R()}},"패스")))
+    }else{
+      md.appendChild(h("div",{style:{fontSize:"17px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",color:"#e8e0d4",marginBottom:"20px",textAlign:"center"}},"몇 시부터 몇 시까지?"));
+      md.appendChild(h("div",{style:{marginBottom:"16px"}},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"6px",display:"block"}},"시작 (6/6 저녁)"),
+        h("div",{style:{display:"flex",gap:"6px",flexWrap:"wrap"}},...APS.map(hr=>h("button",{style:{padding:"8px 14px",borderRadius:"8px",background:S.apSH===hr?"#588157":"rgba(31,43,31,.6)",color:S.apSH===hr?"#fff":"#81B29A",fontSize:"14px",fontWeight:"600"},onClick:()=>{S.apSH=hr;R()}},hr+"시")))));
+      md.appendChild(h("div",{style:{marginBottom:"20px"}},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"6px",display:"block"}},"종료 (6/7 새벽)"),
+        h("div",{style:{display:"flex",gap:"6px",flexWrap:"wrap"}},...APE.map(hr=>h("button",{style:{padding:"8px 14px",borderRadius:"8px",background:S.apEH===hr?"#588157":"rgba(31,43,31,.6)",color:S.apEH===hr?"#fff":"#81B29A",fontSize:"14px",fontWeight:"600"},onClick:()=>{S.apEH=hr;R()}},hr===0?"자정":hr+"시")))));
+      md.appendChild(h("div",{style:{padding:"10px 14px",borderRadius:"10px",background:"rgba(88,129,87,.1)",marginBottom:"16px",fontSize:"13px",color:"#81B29A",textAlign:"center"}},"6/6 "+S.apSH+"시 ~ 6/7 "+(S.apEH===0?"자정":S.apEH+"시")));
+      md.appendChild(h("div",{style:{display:"flex",gap:"8px"}},
+        h("button",{style:{...ss.btnC,flex:"1"},onClick:()=>{S.apStep="ask";R()}},"뒤로"),
+        h("button",{style:{...ss.btn1},onClick:addAP},S.saving?"등록 중...":"등록")))}
+    ov.appendChild(md);pg.appendChild(ov)}
 
-  function renderApTime() {
-    document.getElementById("ap-panel").innerHTML = `
-      <div class="serif" style="font-size:17px;font-weight:700;color:#e8e0d4;margin-bottom:20px;text-align:center">몇 시부터 몇 시까지?</div>
-      <div style="margin-bottom:16px">
-        <label style="font-size:12px;color:#6B705C;margin-bottom:6px;display:block">시작 (6/6 저녁)</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap" id="ap-start-btns"></div>
-      </div>
-      <div style="margin-bottom:20px">
-        <label style="font-size:12px;color:#6B705C;margin-bottom:6px;display:block">종료 (6/7 새벽)</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap" id="ap-end-btns"></div>
-      </div>
-      <div id="ap-summary" style="padding:10px 14px;border-radius:10px;background:rgba(88,129,87,0.1);margin-bottom:16px;font-size:13px;color:#81B29A;text-align:center"></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-ghost" style="flex:1" id="ap-back">뒤로</button>
-        <button class="btn-primary" style="flex:2" id="ap-submit">등록</button>
-      </div>`;
+  // Header
+  pg.appendChild(h("div",{style:ss.hdr},h("div",{},h("div",{style:{fontSize:"15px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",letterSpacing:"1px"}},"산골영화제"),h("div",{style:{fontSize:"11px",color:"#6B705C"}},S.user)),
+    h("div",{style:{display:"flex",gap:"6px",alignItems:"center"}},
+      h("button",{style:{...ss.sm,border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.page="notice";R()}},"Notice"),
+      h("button",{style:{...ss.sm,border:"1px solid rgba(129,178,154,.12)",color:"#81B29A"},onClick:load},"새로고침"),
+      h("button",{style:{...ss.sm,border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.user=null;S.sel=null;S.page="login";R()}},"나가기"))));
 
-    document.getElementById("ap-back").onclick = renderApAsk;
-    document.getElementById("ap-submit").onclick = async () => {
-      modal.remove();
-      const baseId = Date.now().toString();
-      if(endH <= 6) {
-        await apiAdd("schedule", {id:baseId+"a",member:loggedInAs,title:"뒷풀이",category:"기타",start:fmt(startH,0),end:"23:59",date:"2026-06-06",detail:""});
-        if(endH>0) await apiAdd("schedule", {id:baseId+"b",member:loggedInAs,title:"뒷풀이",category:"기타",start:"00:00",end:fmt(endH,0),date:"2026-06-07",detail:""});
-      } else {
-        await apiAdd("schedule", {id:baseId+"a",member:loggedInAs,title:"뒷풀이",category:"기타",start:fmt(startH,0),end:fmt(endH,0),date:"2026-06-06",detail:""});
-      }
-    };
+  // Toggles
+  const tg=h("div",{style:{padding:"12px 20px 0",display:"flex",gap:"12px",alignItems:"center",justifyContent:"space-between"}});
+  const vb=h("div",{style:{display:"flex",gap:"4px"}});
+  [{k:"individual",l:"개인별"},{k:"overview",l:"전체보기"}].forEach(v=>{vb.appendChild(h("button",{style:{padding:"7px 14px",borderRadius:"8px",fontSize:"13px",fontWeight:"600",background:S.view===v.k?"rgba(88,129,87,.25)":"transparent",color:S.view===v.k?"#81B29A":"#6B705C"},onClick:()=>{S.view=v.k;R()}},v.l))});
+  const db=h("div",{style:{display:"flex",gap:"4px"}});
+  DATES.forEach(d=>{const sel=S.date===d;db.appendChild(h("button",{style:{padding:"7px 14px",borderRadius:"8px",border:sel?"1px solid rgba(129,178,154,.3)":"1px solid transparent",background:sel?"rgba(88,129,87,.15)":"transparent",color:sel?"#81B29A":"#6B705C",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.date=d;R()}},DL[d]))});
+  tg.appendChild(vb);tg.appendChild(db);pg.appendChild(tg);
 
-    function renderBtns() {
-      document.getElementById("ap-start-btns").innerHTML = AP_START.map(h =>
-        `<button style="padding:8px 14px;border-radius:8px;background:${startH===h?'#588157':'rgba(31,43,31,0.6)'};color:${startH===h?'#fff':'#81B29A'};font-size:14px;font-weight:600" data-h="${h}" class="ap-s">${h}시</button>`
-      ).join("");
-      document.getElementById("ap-end-btns").innerHTML = AP_END.map(h =>
-        `<button style="padding:8px 14px;border-radius:8px;background:${endH===h?'#588157':'rgba(31,43,31,0.6)'};color:${endH===h?'#fff':'#81B29A'};font-size:14px;font-weight:600" data-h="${h}" class="ap-e">${h===0?'자정':h+'시'}</button>`
-      ).join("");
-      document.getElementById("ap-summary").textContent = `6/6 ${startH}시 ~ 6/7 ${endH===0?'자정':endH+'시'}`;
-      document.querySelectorAll(".ap-s").forEach(b => b.onclick = () => { startH=+b.dataset.h; renderBtns(); });
-      document.querySelectorAll(".ap-e").forEach(b => b.onclick = () => { endH=+b.dataset.h; renderBtns(); });
-    }
-    renderBtns();
-  }
-}
+  // Individual
+  if(S.view==="individual"){const iv=h("div",{style:{padding:"12px 20px 20px"}});
+    const tabs=h("div",{style:{display:"flex",gap:"6px",overflowX:"auto",paddingBottom:"14px",WebkitOverflowScrolling:"touch"}});
+    M.forEach((n,i)=>{const sel=S.sel===n,cnt=getItems(n,S.date).length;
+      const t=h("button",{style:{display:"flex",alignItems:"center",gap:"5px",padding:"5px 12px",borderRadius:"8px",background:sel?P[i]:P[i]+"30",color:sel?PT[i]:P[i],fontSize:"13px",fontWeight:sel?"700":"500",whiteSpace:"nowrap",flexShrink:"0"},onClick:()=>{S.sel=n;R()}},n);
+      if(cnt)t.appendChild(h("span",{style:{background:sel?PT[i]:P[i],color:sel?P[i]:"#1a2e1a",borderRadius:"10px",padding:"1px 6px",fontSize:"10px",fontWeight:"700"}},""+cnt));
+      tabs.appendChild(t)});
+    iv.appendChild(tabs);
+    if(S.sel){const mi=M.indexOf(S.sel);
+      const hd=h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}},
+        h("h2",{style:{fontSize:"17px",fontWeight:"700",color:P[mi],fontFamily:"'Nanum Myeongjo',serif"}},S.sel+"의 스케줄"));
+      if(S.user===S.sel)hd.appendChild(h("button",{style:{padding:"7px 16px",borderRadius:"10px",background:"#588157",color:"#fff",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.editing=null;S.f={title:"",cat:CATS[0],sh:10,sm:0,eh:12,em:0,date:S.date,det:""};S.showAdd=true;R()}},"+  추가"));
+      iv.appendChild(hd);
+      const items=getItems(S.sel,S.date);
+      if(!items.length){iv.appendChild(h("div",{style:{padding:"36px",textAlign:"center",color:"#4a5a4a",background:"rgba(31,43,31,.4)",borderRadius:"14px",border:"1px dashed rgba(129,178,154,.12)"}},"아직 등록된 스케줄이 없어요"))
+      }else{const ls=h("div",{style:{display:"flex",flexDirection:"column",gap:"8px"}});
+        items.forEach(item=>{const cat=CM[item.category]||CM["기타"];
+          const cd=h("div",{style:{background:"rgba(31,43,31,.6)",borderRadius:"14px",padding:"14px 16px",borderLeft:"4px solid "+cat.c}});
+          const rw=h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}});
+          const lf=h("div",{},h("div",{style:{fontSize:"15px",fontWeight:"600",marginBottom:"5px",color:"#e8e0d4"}},item.title),
+            h("div",{style:{display:"flex",gap:"8px",alignItems:"center",flexWrap:"wrap"}},
+              h("span",{style:{fontSize:"11px",padding:"2px 8px",borderRadius:"6px",background:cat.b,color:cat.c,fontWeight:"600"}},item.category),
+              h("span",{style:{fontSize:"13px",color:"#81B29A",fontWeight:"500"}},item.start+" — "+item.end)));
+          if(item.detail)lf.appendChild(h("div",{style:{fontSize:"12px",color:"#94a3b8",marginTop:"5px"}},item.detail));
+          rw.appendChild(lf);
+          if(S.user===S.sel)rw.appendChild(h("div",{style:{display:"flex",gap:"4px"}},
+            h("button",{style:{padding:"4px 8px",borderRadius:"6px",background:"rgba(129,178,154,.1)",color:"#81B29A",fontSize:"12px"},onClick:()=>editSched(item)},"수정"),
+            h("button",{style:{padding:"4px 8px",borderRadius:"6px",background:"rgba(224,122,95,.1)",color:"#E07A5F",fontSize:"12px"},onClick:()=>delSched(S.sel,item.id)},"삭제")));
+          cd.appendChild(rw);ls.appendChild(cd)});iv.appendChild(ls)}}
+    pg.appendChild(iv)}
 
-// ============ NOTICE ============
-function renderNotice() {
-  const byType = {};
-  TICKET_TYPES.forEach(t => { byType[t] = tickets.filter(x=>x.type===t); });
+  // Overview
+  if(S.view==="overview"){const ov=h("div",{style:{padding:"12px 20px 20px",overflowX:"auto"}});
+    const inner=h("div",{style:{minWidth:"300px"}});
+    HRS.forEach(hr=>{const sum=hourSum(S.date,hr);
+      inner.appendChild(h("div",{style:{display:"flex",borderBottom:"1px solid rgba(129,178,154,.05)",minHeight:"38px"}},
+        h("div",{style:{width:"52px",flexShrink:"0",padding:"8px 0",fontSize:"11px",color:"#4a5a4a",fontWeight:"500",textAlign:"right",paddingRight:"12px",fontFamily:"monospace"}},String(hr).padStart(2,"0")+":00"),
+        h("div",{style:{flex:"1",padding:"5px 0",display:"flex",flexWrap:"wrap",gap:"4px"}},...sum.map(({m:member,items,c})=>
+          h("div",{style:{padding:"3px 10px",borderRadius:"8px",background:c+"35",fontSize:"12px",color:c,fontWeight:"600",cursor:"pointer"},onClick:()=>{S.sel=member;S.view="individual";R()}},member+" · "+items.map(i=>i.title).join(", "))))))});
+    ov.appendChild(inner);pg.appendChild(ov)}
 
-  app.innerHTML = `
-    <div style="padding:14px 20px;border-bottom:1px solid rgba(129,178,154,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(26,46,26,0.9);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100">
-      <div class="serif" style="font-size:15px;font-weight:700;letter-spacing:1px">Notice</div>
-      <button onclick="page=loggedInAs?'main':'login';render()" style="padding:6px 12px;border-radius:8px;border:1px solid rgba(129,178,154,0.12);background:transparent;color:#81B29A;font-size:12px">← 돌아가기</button>
-    </div>
-    <div style="padding:20px;max-width:480px;margin:0 auto">
-      <div style="margin-bottom:32px">
-        <h2 class="serif" style="font-size:17px;font-weight:700;color:#A98467;margin-bottom:14px">1. 숙소 배정</h2>
-        ${ROOMS.map(r => `
-          <div style="background:rgba(31,43,31,0.6);border-radius:12px;padding:12px 16px;border-left:4px solid #A98467;margin-bottom:8px">
-            <div style="font-size:14px;font-weight:700;color:#A98467;margin-bottom:4px">${r.room}</div>
-            <div style="font-size:14px;color:${r.members.length>0?'#e8e0d4':'#4a5a4a'}">${r.members.length>0?r.members.join(", "):"미정"}</div>
-          </div>`).join("")}
-      </div>
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <h2 class="serif" style="font-size:17px;font-weight:700;color:#E07A5F">2. 티켓 양도 내역</h2>
-          <button onclick="showTicketForm()" style="padding:6px 14px;border-radius:8px;background:#588157;color:#fff;font-size:12px;font-weight:600">+ 추가</button>
-        </div>
-        <div style="font-size:12px;color:#6B705C;margin-bottom:14px;padding:8px 12px;border-radius:8px;background:rgba(129,178,154,0.06);line-height:1.6">양도자와 피양도자가 표를 주고받은 후에는 항목을 삭제해주세요.</div>
-        ${TICKET_TYPES.map(type => {
-          const tt = byType[type]||[];
-          const c = TICKET_COLORS[type];
-          return `<div style="margin-bottom:16px">
-            <div style="font-size:13px;font-weight:700;color:${c};margin-bottom:6px">${type}</div>
-            ${tt.length===0 ? '<div style="font-size:13px;color:#4a5a4a;padding:6px 0">—</div>' :
-              tt.map(t => `<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(31,43,31,0.6);border-radius:10px;padding:10px 14px;border-left:3px solid ${c};margin-bottom:6px">
-                <div style="font-size:14px;color:#e8e0d4">${t.movie} <span style="color:#6B705C">(${t.name})</span></div>
-                <button onclick="apiDelete('ticket','${t.id}')" style="padding:3px 8px;border-radius:6px;background:rgba(224,122,95,0.1);color:#E07A5F;font-size:11px">삭제</button>
-              </div>`).join("")}
-          </div>`;
-        }).join("")}
-      </div>
-    </div>`;
-}
+  // Add/Edit
+  if(S.showAdd){const ov=h("div",{style:{...ss.overlay,alignItems:"flex-end"},onClick:e=>{if(e.target===e.currentTarget){S.showAdd=false;S.editing=null;R()}}});
+    const md=h("div",{style:ss.modal});
+    md.appendChild(h("h3",{style:{fontSize:"17px",fontWeight:"700",margin:"0 0 20px",fontFamily:"'Nanum Myeongjo',serif",color:"#81B29A"}},S.editing?"스케줄 수정":"스케줄 추가"));
+    const fm=h("div",{style:{display:"flex",flexDirection:"column",gap:"14px"}});
+    // Cat
+    fm.appendChild(h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"6px",display:"block"}},"카테고리"),
+      h("div",{style:{display:"flex",gap:"6px",flexWrap:"wrap"}},...CATS.map(cat=>{const m=CM[cat],sel=S.f.cat===cat;
+        return h("button",{style:{padding:"6px 12px",borderRadius:"8px",border:sel?"1px solid "+m.c+"55":"1px solid rgba(129,178,154,.08)",background:sel?m.b:"transparent",color:sel?m.c:"#6B705C",fontSize:"12px",fontWeight:"600"},onClick:()=>{S.f.cat=cat;S.f.det="";R()}},cat)}))));
+    // Title
+    const tph={"영화":"예: 어느 가족","등나무":"예: 야외상영","식사":"예: 점심","이동":"예: 서울→무주"};
+    fm.appendChild(h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},"제목"),
+      (()=>{const i=h("input",{style:ss.input,placeholder:tph[S.f.cat]||"예: 산책",value:S.f.title,onInput:e=>{S.f.title=e.target.value}});return i})()));
+    // Detail
+    const detCfg={"영화":{label:"장소 (필수)",ph:"예: 무주군민의집",c:"#E07A5F"},"등나무":{label:"프로그램 (필수)",ph:"예: 콘서트",c:"#9B8EC4"},"식사":{label:"어디에서? (필수)",ph:"예: 미정",c:"#F2CC8F"}};
+    if(detCfg[S.f.cat]){const dc=detCfg[S.f.cat];
+      fm.appendChild(h("div",{},h("label",{style:{fontSize:"12px",color:dc.c,marginBottom:"4px",display:"block"}},dc.label),
+        (()=>{const i=h("input",{style:{...ss.input,borderColor:S.f.det?"rgba(129,178,154,.2)":dc.c+"66"},placeholder:dc.ph,value:S.f.det,onInput:e=>{S.f.det=e.target.value}});return i})()))}
+    if(S.f.cat==="이동"){fm.appendChild(h("div",{},h("label",{style:{fontSize:"12px",color:"#81B29A",marginBottom:"6px",display:"block"}},"어떻게? (필수)"),
+      h("div",{style:{display:"flex",gap:"6px",flexWrap:"wrap"}},...TRANS.map(opt=>h("button",{style:{padding:"8px 14px",borderRadius:"8px",background:S.f.det===opt?"rgba(129,178,154,.25)":"rgba(31,43,31,.6)",color:S.f.det===opt?"#81B29A":"#6B705C",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.f.det=opt;R()}},opt)))))}
+    // Date
+    fm.appendChild(h("div",{},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},"날짜"),
+      h("div",{style:{display:"flex",gap:"8px"}},...DATES.map(d=>{const sel=S.f.date===d;return h("button",{style:{padding:"8px 18px",borderRadius:"8px",border:sel?"1px solid rgba(129,178,154,.3)":"1px solid rgba(129,178,154,.08)",background:sel?"rgba(88,129,87,.15)":"transparent",color:sel?"#81B29A":"#6B705C",fontSize:"13px",fontWeight:"600"},onClick:()=>{S.f.date=d;R()}},DL[d])}))));
+    // Time
+    const tr=h("div",{style:{display:"flex",gap:"12px"}});
+    [{l:"시작",hk:"sh",mk:"sm"},{l:"종료",hk:"eh",mk:"em"}].forEach(t=>{
+      const col=h("div",{style:{flex:"1"}},h("label",{style:{fontSize:"12px",color:"#6B705C",marginBottom:"4px",display:"block"}},t.l));
+      const sr=h("div",{style:{display:"flex",gap:"6px"}});
+      sr.appendChild(mkSel(S.f[t.hk],HRS.map(hr=>({v:hr,l:String(hr).padStart(2,"0")+"시"})),v=>{S.f[t.hk]=v}));
+      sr.appendChild(mkSel(S.f[t.mk],[0,15,30,45].map(m=>({v:m,l:String(m).padStart(2,"0")+"분"})),v=>{S.f[t.mk]=v}));
+      col.appendChild(sr);tr.appendChild(col)});
+    fm.appendChild(tr);
+    const v=fv();
+    fm.appendChild(h("div",{style:{display:"flex",gap:"8px",marginTop:"8px"}},
+      h("button",{style:ss.btnC,onClick:()=>{S.showAdd=false;S.editing=null;R()}},"취소"),
+      h("button",{style:{...ss.btn1,background:v?"#588157":"#3d4a3d",color:v?"#fff":"#4a5a4a",cursor:v?"pointer":"default"},onClick:()=>{if(v){S.editing?updSched():addSched()}}},S.saving?"저장 중...":(S.editing?"수정 완료":"추가하기"))));
+    md.appendChild(fm);ov.appendChild(md);pg.appendChild(ov)}
 
-function showTicketForm() {
-  let type=TICKET_TYPES[0], movie="", name="";
-  const modal = document.createElement("div");
-  modal.className = "modal-backdrop";
-  modal.onclick = e => { if(e.target===modal) modal.remove(); };
-  modal.innerHTML = `<div class="modal-panel" id="tf-panel"></div>`;
-  document.body.appendChild(modal);
-  renderTF();
+  if(S.saving)pg.appendChild(h("div",{style:{position:"fixed",bottom:"20px",left:"50%",transform:"translateX(-50%)",background:"rgba(31,43,31,.95)",color:"#81B29A",padding:"8px 20px",borderRadius:"20px",fontSize:"13px",border:"1px solid rgba(88,129,87,.3)",zIndex:"300"}},"저장 중..."));
+  app.appendChild(pg)}
 
-  function renderTF() {
-    document.getElementById("tf-panel").innerHTML = `
-      <h3 class="serif" style="font-size:17px;font-weight:700;margin-bottom:20px;color:#E07A5F">티켓 양도 등록</h3>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div>
-          <label style="font-size:12px;color:#6B705C;margin-bottom:6px;display:block">상태</label>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${TICKET_TYPES.map(t => `<button class="tf-type" data-t="${t}" style="padding:7px 12px;border-radius:8px;background:${type===t?'rgba(224,122,95,0.2)':'rgba(31,43,31,0.6)'};color:${type===t?'#E07A5F':'#6B705C'};font-size:12px;font-weight:600">${t}</button>`).join("")}
-          </div>
-        </div>
-        <div><label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">영화 제목</label><input class="input" id="tf-movie" placeholder="예: 어느 가족" value="${movie}"></div>
-        <div><label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">이름</label><input class="input" id="tf-name" placeholder="예: 지혜" value="${name}"></div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn-ghost" style="flex:1" onclick="this.closest('.modal-backdrop').remove()">취소</button>
-          <button class="btn-primary" style="flex:2" id="tf-submit">등록</button>
-        </div>
-      </div>`;
-    document.querySelectorAll(".tf-type").forEach(b => b.onclick = () => { type=b.dataset.t; renderTF(); });
-    document.getElementById("tf-movie").oninput = e => movie=e.target.value;
-    document.getElementById("tf-name").oninput = e => name=e.target.value;
-    document.getElementById("tf-submit").onclick = async () => {
-      if(!movie||!name) return;
-      modal.remove();
-      await apiAdd("ticket", {id:Date.now().toString(),type,movie,name});
-    };
-  }
-}
-
-// ============ MAIN APP ============
-function renderMain() {
-  app.innerHTML = `
-    <!-- Header -->
-    <div style="padding:14px 20px;border-bottom:1px solid rgba(129,178,154,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(26,46,26,0.9);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100">
-      <div>
-        <div class="serif" style="font-size:15px;font-weight:700;letter-spacing:1px">산골영화제</div>
-        <div style="font-size:11px;color:#6B705C">${loggedInAs}</div>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <button onclick="page='notice';render()" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(224,122,95,0.2);background:transparent;color:#E07A5F;font-size:12px">Notice</button>
-        <button onclick="loadAll()" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(129,178,154,0.12);background:transparent;color:#81B29A;font-size:12px">새로고침</button>
-        <button onclick="loggedInAs=null;selectedMember=null;page='login';render()" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(224,122,95,0.2);background:transparent;color:#E07A5F;font-size:12px">나가기</button>
-      </div>
-    </div>
-
-    <!-- Toggles -->
-    <div style="padding:12px 20px 0;display:flex;gap:12px;align-items:center;justify-content:space-between">
-      <div style="display:flex;gap:4px">
-        ${["individual","overview"].map(k => `<button onclick="viewMode='${k}';render()" style="padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;background:${viewMode===k?'rgba(88,129,87,0.25)':'transparent'};color:${viewMode===k?'#81B29A':'#6B705C'}">${k==='individual'?'개인별':'전체보기'}</button>`).join("")}
-      </div>
-      <div style="display:flex;gap:4px">
-        ${DATES.map(d => `<button onclick="selectedDate='${d}';render()" style="padding:7px 14px;border-radius:8px;border:${selectedDate===d?'1px solid rgba(129,178,154,0.3)':'1px solid transparent'};background:${selectedDate===d?'rgba(88,129,87,0.15)':'transparent'};color:${selectedDate===d?'#81B29A':'#6B705C'};font-size:13px;font-weight:600">${DATE_LABELS[d]}</button>`).join("")}
-      </div>
-    </div>
-
-    <div style="padding:12px 20px 20px" id="main-content"></div>`;
-
-  if(viewMode==="individual") renderIndividual();
-  else renderOverview();
-}
-
-function renderIndividual() {
-  const mc = document.getElementById("main-content");
-  mc.innerHTML = `
-    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:14px;-webkit-overflow-scrolling:touch">
-      ${MEMBERS.map((n,i) => {
-        const sel = selectedMember===n;
-        const cnt = getMemberItems(n,selectedDate).length;
-        return `<button onclick="selectedMember='${n}';render()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;background:${sel?PASTEL[i]:PASTEL[i]+'30'};color:${sel?PASTEL_TEXT[i]:PASTEL[i]};font-size:13px;font-weight:${sel?700:500};white-space:nowrap;flex-shrink:0">${n}${cnt>0?`<span style="background:${sel?PASTEL_TEXT[i]:PASTEL[i]};color:${sel?PASTEL[i]:'#1a2e1a'};border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700">${cnt}</span>`:''}</button>`;
-      }).join("")}
-    </div>
-    <div id="member-schedule"></div>`;
-
-  if(!selectedMember) return;
-  const items = getMemberItems(selectedMember, selectedDate);
-  const isMe = loggedInAs === selectedMember;
-  const idx = MEMBERS.indexOf(selectedMember);
-  const ms = document.getElementById("member-schedule");
-
-  ms.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <h2 class="serif" style="font-size:17px;font-weight:700;color:${PASTEL[idx]}">${selectedMember}의 스케줄</h2>
-      ${isMe ? `<button onclick="showScheduleForm()" style="padding:7px 16px;border-radius:10px;background:#588157;color:#fff;font-size:13px;font-weight:600">+ 추가</button>` : ''}
-    </div>
-    ${items.length === 0 ?
-      '<div style="padding:36px;text-align:center;color:#4a5a4a;background:rgba(31,43,31,0.4);border-radius:14px;border:1px dashed rgba(129,178,154,0.12)">아직 등록된 스케줄이 없어요</div>' :
-      items.map(item => {
-        const cat = CATEGORIES[item.category] || CATEGORIES["기타"];
-        return `<div style="background:rgba(31,43,31,0.6);border-radius:14px;padding:14px 16px;border-left:4px solid ${cat.color};margin-bottom:8px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start">
-            <div>
-              <div style="font-size:15px;font-weight:600;margin-bottom:5px;color:#e8e0d4">${item.title}</div>
-              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                <span class="tag" style="background:${cat.bg};color:${cat.color}">${item.category}</span>
-                <span style="font-size:13px;color:#81B29A;font-weight:500">${item.start} — ${item.end}</span>
-              </div>
-              ${item.detail ? `<div style="font-size:12px;color:#94a3b8;margin-top:5px">${item.detail}</div>` : ''}
-            </div>
-            ${isMe ? `<div style="display:flex;gap:4px">
-              <button onclick='editSchedule(${JSON.stringify(item).replace(/'/g,"&#39;")})' style="padding:4px 8px;border-radius:6px;background:rgba(129,178,154,0.1);color:#81B29A;font-size:12px">수정</button>
-              <button onclick="apiDelete('schedule','${item.id}')" style="padding:4px 8px;border-radius:6px;background:rgba(224,122,95,0.1);color:#E07A5F;font-size:12px">삭제</button>
-            </div>` : ''}
-          </div>
-        </div>`;
-      }).join("")}`;
-}
-
-function renderOverview() {
-  const mc = document.getElementById("main-content");
-  mc.innerHTML = HOURS.map(hour => {
-    const summary = getHourSummary(selectedDate, hour);
-    return `<div style="display:flex;border-bottom:1px solid rgba(129,178,154,0.05);min-height:38px">
-      <div style="width:52px;flex-shrink:0;padding:8px 0;font-size:11px;color:#4a5a4a;font-weight:500;text-align:right;padding-right:12px;font-family:monospace">${String(hour).padStart(2,"0")}:00</div>
-      <div style="flex:1;padding:5px 0;display:flex;flex-wrap:wrap;gap:4px">
-        ${summary.map(({member,items,color}) =>
-          `<div onclick="selectedMember='${member}';viewMode='individual';render()" style="padding:3px 10px;border-radius:8px;background:${color}35;font-size:12px;color:${color};font-weight:600;cursor:pointer">${member} · ${items.map(i=>i.title).join(", ")}</div>`
-        ).join("")}
-      </div>
-    </div>`;
-  }).join("");
-}
-
-// ============ SCHEDULE FORM ============
-function showScheduleForm(editItem) {
-  let cat = editItem?.category || CAT_KEYS[0];
-  let title = editItem?.title || "";
-  let detail = editItem?.detail || "";
-  let date = editItem?.date || selectedDate;
-  let sH = editItem ? parseT(editItem.start).h : 10;
-  let sM = editItem ? parseT(editItem.start).m : 0;
-  let eH = editItem ? parseT(editItem.end).h : 12;
-  let eM = editItem ? parseT(editItem.end).m : 0;
-
-  const modal = document.createElement("div");
-  modal.className = "modal-backdrop";
-  modal.onclick = e => { if(e.target===modal) modal.remove(); };
-  modal.innerHTML = `<div class="modal-panel" id="sf-panel"></div>`;
-  document.body.appendChild(modal);
-  renderSF();
-
-  function isValid() { return title && (["영화","식사","이동","등나무"].includes(cat) ? !!detail : true); }
-
-  function getPlaceholder() {
-    return {영화:"예: 어느 가족",등나무:"예: 야외상영",식사:"예: 점심",이동:"예: 서울→무주"}[cat]||"예: 산책";
-  }
-
-  function renderSF() {
-    const v = isValid();
-    document.getElementById("sf-panel").innerHTML = `
-      <h3 class="serif" style="font-size:17px;font-weight:700;margin-bottom:20px;color:#81B29A">${editItem?"스케줄 수정":"스케줄 추가"}</h3>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div>
-          <label style="font-size:12px;color:#6B705C;margin-bottom:6px;display:block">카테고리</label>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${CAT_KEYS.map(c => `<button class="sf-cat" data-c="${c}" style="padding:6px 12px;border-radius:8px;border:${cat===c?'1px solid '+CATEGORIES[c].color+'55':'1px solid rgba(129,178,154,0.08)'};background:${cat===c?CATEGORIES[c].bg:'transparent'};color:${cat===c?CATEGORIES[c].color:'#6B705C'};font-size:12px;font-weight:600">${c}</button>`).join("")}
-          </div>
-        </div>
-        <div><label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">제목</label><input class="input" id="sf-title" placeholder="${getPlaceholder()}" value="${title}"></div>
-        ${cat==="영화"?`<div><label style="font-size:12px;color:#E07A5F;margin-bottom:4px;display:block">장소 (필수)</label><input class="input" id="sf-detail" placeholder="예: 무주군민의집" value="${detail}" style="border-color:${detail?'rgba(129,178,154,0.2)':'rgba(224,122,95,0.4)'}"></div>`:''}
-        ${cat==="등나무"?`<div><label style="font-size:12px;color:#9B8EC4;margin-bottom:4px;display:block">프로그램 (필수)</label><input class="input" id="sf-detail" placeholder="예: 콘서트" value="${detail}" style="border-color:${detail?'rgba(129,178,154,0.2)':'rgba(155,142,196,0.4)'}"></div>`:''}
-        ${cat==="식사"?`<div><label style="font-size:12px;color:#F2CC8F;margin-bottom:4px;display:block">어디에서? (필수)</label><input class="input" id="sf-detail" placeholder="예: 미정" value="${detail}" style="border-color:${detail?'rgba(129,178,154,0.2)':'rgba(242,204,143,0.4)'}"></div>`:''}
-        ${cat==="이동"?`<div><label style="font-size:12px;color:#81B29A;margin-bottom:6px;display:block">어떻게? (필수)</label><div style="display:flex;gap:6px;flex-wrap:wrap">${TRANSPORT.map(o=>`<button class="sf-tr" data-o="${o}" style="padding:8px 14px;border-radius:8px;background:${detail===o?'rgba(129,178,154,0.25)':'rgba(31,43,31,0.6)'};color:${detail===o?'#81B29A':'#6B705C'};font-size:13px;font-weight:600">${o}</button>`).join("")}</div></div>`:''}
-        <div>
-          <label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">날짜</label>
-          <div style="display:flex;gap:8px">
-            ${DATES.map(d => `<button class="sf-date" data-d="${d}" style="padding:8px 18px;border-radius:8px;border:${date===d?'1px solid rgba(129,178,154,0.3)':'1px solid rgba(129,178,154,0.08)'};background:${date===d?'rgba(88,129,87,0.15)':'transparent'};color:${date===d?'#81B29A':'#6B705C'};font-size:13px;font-weight:600">${DATE_LABELS[d]}</button>`).join("")}
-          </div>
-        </div>
-        <div style="display:flex;gap:12px">
-          <div style="flex:1"><label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">시작</label><div style="display:flex;gap:6px"><select class="input" id="sf-sh" style="padding:8px">${HOURS.map(h=>`<option value="${h}" ${sH===h?'selected':''}>${String(h).padStart(2,"0")}시</option>`).join("")}</select><select class="input" id="sf-sm" style="padding:8px">${[0,15,30,45].map(m=>`<option value="${m}" ${sM===m?'selected':''}>${String(m).padStart(2,"0")}분</option>`).join("")}</select></div></div>
-          <div style="flex:1"><label style="font-size:12px;color:#6B705C;margin-bottom:4px;display:block">종료</label><div style="display:flex;gap:6px"><select class="input" id="sf-eh" style="padding:8px">${HOURS.map(h=>`<option value="${h}" ${eH===h?'selected':''}>${String(h).padStart(2,"0")}시</option>`).join("")}</select><select class="input" id="sf-em" style="padding:8px">${[0,15,30,45].map(m=>`<option value="${m}" ${eM===m?'selected':''}>${String(m).padStart(2,"0")}분</option>`).join("")}</select></div></div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn-ghost" style="flex:1" onclick="this.closest('.modal-backdrop').remove()">취소</button>
-          <button class="btn-primary" style="flex:2" id="sf-submit" ${v?'':'disabled'}>${editItem?'수정 완료':'추가하기'}</button>
-        </div>
-      </div>`;
-
-    // Events
-    document.querySelectorAll(".sf-cat").forEach(b => b.onclick = () => { cat=b.dataset.c; detail=""; renderSF(); });
-    document.getElementById("sf-title").oninput = e => { title=e.target.value; document.getElementById("sf-submit").disabled=!isValid(); };
-    const detailEl = document.getElementById("sf-detail");
-    if(detailEl) detailEl.oninput = e => { detail=e.target.value; document.getElementById("sf-submit").disabled=!isValid(); };
-    document.querySelectorAll(".sf-tr").forEach(b => b.onclick = () => { detail=b.dataset.o; renderSF(); });
-    document.querySelectorAll(".sf-date").forEach(b => b.onclick = () => { date=b.dataset.d; renderSF(); });
-    document.getElementById("sf-sh").onchange = e => sH=+e.target.value;
-    document.getElementById("sf-sm").onchange = e => sM=+e.target.value;
-    document.getElementById("sf-eh").onchange = e => eH=+e.target.value;
-    document.getElementById("sf-em").onchange = e => eM=+e.target.value;
-
-    document.getElementById("sf-submit").onclick = async () => {
-      if(!isValid()) return;
-      modal.remove();
-      const data = {id:editItem?.id||Date.now().toString(), member:loggedInAs, title, category:cat, start:fmt(sH,sM), end:fmt(eH,eM), date, detail:detail||""};
-      if(editItem) await apiUpdate(data);
-      else await apiAdd("schedule", data);
-    };
-  }
-}
-
-function editSchedule(item) {
-  showScheduleForm(item);
-}
-
-// Init
-loadAll();
+load();
 </script>
 </body>
 </html>

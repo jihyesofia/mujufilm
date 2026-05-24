@@ -1,0 +1,13 @@
+{
+  "name": "무주산골영화제 2026",
+  "short_name": "산골영화제",
+  "description": "6/6-6/7 스케줄 보드",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a2e1a",
+  "theme_color": "#1a2e1a",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
