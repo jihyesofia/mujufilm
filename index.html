@@ -44,14 +44,58 @@ const pT=s=>{const p=String(s).split(":").map(Number);return{h:p[0]||0,m:p[1]||0
 
 async function q(action,extra={}){
   const p=new URLSearchParams({action,...extra});
-  try{const r=await fetch(API+"?"+p);return await r.json();}catch(e){console.error(e);return null;}
+  const url=API+"?"+p;
+  try{
+    const r=await fetch(url,{redirect:"follow"});
+    return await r.json();
+  }catch(e){
+    console.warn("fetch failed, trying JSONP",e);
+    // Fallback: JSONP-style via script tag
+    return new Promise((resolve)=>{
+      const cb="_cb"+Date.now();
+      window[cb]=d=>{resolve(d);delete window[cb];document.getElementById(cb)?.remove()};
+      const s=document.createElement("script");
+      s.id=cb;s.src=url+"&callback="+cb;
+      s.onerror=()=>{resolve(null);delete window[cb];s.remove()};
+      document.body.appendChild(s);
+    });
+  }
 }
 
-function grp(rows){const g={};(rows||[]).forEach(r=>{if(!r.member)return;(g[r.member]=g[r.member]||[]).push(r)});return g}
+function normTime(v){
+  if(!v&&v!==0)return"00:00";
+  const s=String(v);
+  // Already HH:MM
+  if(/^\d{1,2}:\d{2}$/.test(s))return s.padStart(5,"0");
+  // Google Sheets Date object string like "Sat Dec 30 1899 10:00:00 GMT..."
+  const dm=s.match(/(\d{1,2}):(\d{2}):\d{2}/);
+  if(dm)return String(dm[1]).padStart(2,"0")+":"+dm[2];
+  // Number (decimal hours, e.g. 0.416666 = 10:00)
+  const n=Number(v);
+  if(!isNaN(n)&&n>=0&&n<1){const total=Math.round(n*1440);return String(Math.floor(total/60)).padStart(2,"0")+":"+String(total%60).padStart(2,"0")}
+  return"00:00";
+}
+function normDate(v){
+  if(!v)return"";
+  const s=String(v);
+  // Already YYYY-MM-DD
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  // Google Sheets might return Date string
+  const dm=s.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if(dm)return dm[0];
+  // Try parsing as Date
+  try{const d=new Date(v);if(!isNaN(d)){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return y+"-"+m+"-"+dd}}catch(e){}
+  return String(v);
+}
+function normRow(r){return{...r,start:normTime(r.start),end:normTime(r.end),date:normDate(r.date),id:String(r.id),detail:r.detail||""}}
+function grp(rows){const g={};(rows||[]).forEach(r=>{if(!r.member)return;const nr=normRow(r);(g[nr.member]=g[nr.member]||[]).push(nr)});return g}
 
 async function load(){
-  const[s,t]=await Promise.all([q("getSchedules"),q("getTickets")]);
-  if(s)S.sched=grp(s);if(t)S.tickets=t;S.loading=false;R();
+  S.saving=true;R();
+  try{const[s,t]=await Promise.all([q("getSchedules"),q("getTickets")]);
+  if(s&&!s.error)S.sched=grp(s);if(t&&!t.error)S.tickets=Array.isArray(t)?t:[];
+  }catch(e){console.error("load error",e)}
+  S.loading=false;S.saving=false;R();
 }
 
 function getItems(m,d){return(S.sched[m]||[]).filter(i=>i.date===d).sort((a,b)=>String(a.start).localeCompare(String(b.start)))}
@@ -77,8 +121,11 @@ async function addTk(){if(!S.tm||!S.tn)return;S.saving=true;R();
   await q("addTicket",{data:JSON.stringify({id:""+Date.now(),type:S.tt,movie:S.tm,name:S.tn})});S.tm="";S.tn="";S.showTF=false;S.saving=false;await load()}
 async function delTk(id){S.saving=true;R();await q("deleteTicket",{id});S.saving=false;await load()}
 
-function login(name){S.user=name;S.sel=name;S.page="main";
-  if(!(S.sched[name]||[]).some(i=>i.category==="기타"&&i.title==="뒷풀이")){S.showAP=true;S.apStep="ask"}R()}
+async function login(name){S.user=name;S.sel=name;S.page="main";S.saving=true;R();
+  await load();
+  const hasAP=(S.sched[name]||[]).some(i=>i.title==="뒷풀이");
+  if(!hasAP){S.showAP=true;S.apStep="ask"}
+  R()}
 
 // ===== DOM helpers =====
 function h(t,a,...c){const el=document.createElement(t);if(a)Object.entries(a).forEach(([k,v])=>{
