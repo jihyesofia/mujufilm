@@ -232,9 +232,8 @@ function R(){
   // Header
   pg.appendChild(h("div",{style:ss.hdr},h("div",{},h("div",{style:{fontSize:"15px",fontWeight:"700",fontFamily:"'Nanum Myeongjo',serif",letterSpacing:"1px"}},"산골영화제"),h("div",{style:{fontSize:"11px",color:"#6B705C"}},S.user)),
     h("div",{style:{display:"flex",gap:"6px",alignItems:"center"}},
-      h("button",{style:{...ss.sm,border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.page="notice";R()}},"Notice"),
-      h("button",{style:{...ss.sm,border:"1px solid rgba(129,178,154,.12)",color:"#81B29A"},onClick:load},"새로고침"),
-      h("button",{style:{...ss.sm,border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.user=null;S.sel=null;S.page="login";R()}},"나가기"))));
+      h("button",{style:{...ss.sm,padding:"8px 12px",border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.page="notice";R()}},"Notice"),
+      h("button",{style:{...ss.sm,padding:"8px 12px",border:"1px solid rgba(224,122,95,.2)",color:"#E07A5F"},onClick:()=>{S.user=null;S.sel=null;S.page="login";R()}},"나가기"))));
 
   // Toggles
   const tg=h("div",{style:{padding:"12px 20px 0",display:"flex",gap:"12px",alignItems:"center",justifyContent:"space-between"}});
